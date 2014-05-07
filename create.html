@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+  <head>
+  <title>Project 2</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url: "/musicians/checkbox",
+                type: "POST",
+                contentType: "application/json",
+                processData: false,
+                complete: function (data) {
+                    $('div#bandMembers').html(data.responseText);
+                }
+            });
+
+            $.ajax({
+                url: "/bands/checkbox",
+                type: "POST",
+                contentType: "application/json",
+                processData: false,
+                complete: function (data) {
+                    $('div#concertBands').html(data.responseText);
+                }
+            });
+
+            $.ajax({
+                url: "/venues/list",
+                type: "POST",
+                contentType: "application/json",
+                processData: false,
+                complete: function (data) {
+                    $('div#concertVenues').html(data.responseText);
+                }
+            });
+
+            $('#user-create').click(function () {
+                var payload = {
+                    FName: $('#firstname').val(),
+                    LName: $('#lastname').val(),
+                    Email: $('#email').val(),
+                    Instrument: $('#instrument').val()
+                };
+
+                $.ajax({
+                    url: "/createMusician",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+
+            $('#band-create').click(function () {
+                var all = document.getElementsByName("musicianCheckbox");
+                var checked = [];
+                for (var i = 0; i < all.length; i++) {
+                    if (all[i].checked == true)
+                        checked.push(all[i].value);
+                }
+
+                var payload = {
+                    Name: $('#bandName').val(),
+                    City: $('#bandCity').val(),
+                    ManagerEmail: $('#bandManager').val(),
+                    Musicians: checked
+                };
+
+                $.ajax({
+                    url: "/createBand",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+
+            $('#venue-create').click(function () {
+                var payload = {
+                    Name: $('#venueName').val(),
+                    City: $('#venueCity').val(),
+                    Street: $('#venueStreet').val(),
+                    Zip: $('#venueZip').val()
+                };
+
+                console.log(payload);
+
+                $.ajax({
+                    url: "/createVenue",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+
+            $('#concert-create').click(function () {
+                var all = document.getElementsByName("bandCheckbox");
+                var checked = [];
+                for (var i = 0; i < all.length; i++) {
+                    if (all[i].checked == true)
+                        checked.push(all[i].value);
+                }
+                var payload = {
+                    Name: $('#concertName').val(),
+                    ConcertTime: $('#datepicker').val(),
+                    VenueID: $('#venue-list').val(),
+                    Bands: checked
+                };
+
+                $.ajax({
+                    url: "/createConcert",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    <link href="/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script>
+    $(function() {
+        $("#datepicker").datepicker();
+    });
+    </script>
+  </head>
+  <body>
+    <div id="header">
+       <b> <a href="/" id="homepage"> Music Industry Database </a> </b>
+    </div>
+
+    <div id="menu" >
+        <a href="/createuser/"> Create </a> <br />
+        <a href="/edit/"> Edit </a> <br />
+        <a href="/getuser/"> View </a>
+    </div>
+
+    <div id="page" >
+        Create
+    </div>
+
+    <div id="section">
+        <h3> Musician </h3>
+        Email <br /> <input id="email" type="text" /> <br />
+        First name <br /> <input id="firstname" type="text" /> <br />
+        Last name <br /> <input id="lastname" type="text" /> <br />
+        Instrument <br /> <input id="instrument" type="text" /> <br />
+        <br /> <input id="user-create" type="submit" value="Create Musician" /> <br />
+    </div>
+
+    <div id="section">
+        <h3> Band </h3>
+        Band Name <br /> <input id="bandName" type="text" /> <br />
+        City <br /> <input id="bandCity" type="text" /> <br />
+        Manager Email <br /> <input id="bandManager" type="text" /> <br />
+        Members <br />
+        <div id="bandMembers"></div>
+        <br /> <input id="band-create" type="submit" value="Create Band" /> <br />
+    </div>
+
+    <div id="section">
+        <h3> Venue </h3>
+        Venue Name <br /> <input id="venueName" type="text" /> <br />
+        City <br /> <input id="venueCity" type="text" /> <br />
+        Street <br /> <input id="venueStreet" type="text" /> <br />
+        Zip <br /> <input id="venueZip" type="text" /> <br />
+        Phone <br /> <input id="venuePhone" type="text" /> <br />
+        <br /> <input id="venue-create" type="submit" value="Create Venue" /> <br />
+    </div>
+
+    <div id="section">
+        <h3> Concert </h3>
+        Concert Name <br /> <input id="concertName" type="text" /> <br />
+        Date <br /> <input type="text" id="datepicker" /> <br />
+        Venue <br />
+        <div id="concertVenues"></div>
+        Bands <br />
+        <div id="concertBands"></div>
+        <br /> <input id="concert-create" type="submit" value="Create Concert" /> <br />
+    </div>
+
+    <div id="section">
+        <p id="output"></p>
+    </div>
+
+    <div id="footer">
+        <a href="/about/"> About </a>
+    </div>
+  </body>
+</html>

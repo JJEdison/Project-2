@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+  <head>
+  <title>Project 2</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#musicianOption').click(function () {
+                var payload = {};
+
+                $.ajax({
+                    url: "/getMusicians",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+
+            $('#bandOption').click(function () {
+                var payload = {};
+
+                $.ajax({
+                    url: "/getBands",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+
+            $('#venueOption').click(function () {
+                var payload = {};
+
+                $.ajax({
+                    url: "/getVenues",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+
+            $('#concertOption').click(function () {
+                var payload = {};
+
+                $.ajax({
+                    url: "/getConcerts",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+    });
+    </script>
+    <link href="/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="header">
+       <b> <a href="/" id="homepage"> Music Industry Database </a> </b>
+    </div>
+
+    <div id="menu" >
+        <a href="/createuser/"> Create </a> <br />
+        <a href="/edit/"> Edit </a> <br />
+        <a href="/getuser/"> View </a>
+    </div>
+
+    <div id="page" >
+        View
+    </div>
+
+    <form id="options">
+        <input type="radio" name="tableChoice" id="musicianOption" value="Musicians"/>Musicians<br/>
+        <input type="radio" name="tableChoice" id="bandOption" value="Bands"/>Bands<br/>
+        <input type="radio" name="tableChoice" id="venueOption" value="Venues"/>Venues<br/>
+        <input type="radio" name="tableChoice" id="concertOption" value="Concerts"/>Concerts<br/>
+    </form>
+    <br />
+
+    <div id="output"></div>
+
+    <div id="footer">
+         <a href="/about/"> About </a>
+    </div>
+  </body>
+</html>
